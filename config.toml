@@ -272,10 +272,10 @@ enableGitInfo = false
     icon_pack = "fab"
     link = "https://twitter.com/GeraldBelton"
 
-#  [[params.social]]
-#    icon = "google-scholar"
-#    icon_pack = "ai"
-#    link = "https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ"
+  [[params.social]]
+    icon = "linkedin"
+    icon_pack = "fab"
+    link = "https://www.linkedin.com/in/beltongerald" 
 
   [[params.social]]
     icon = "github"
@@ -303,24 +303,24 @@ enableGitInfo = false
   weight = 1
 
 [[menu.main]]
-  name = "Publications"
-  url = "#publications_selected"
+  name = "Talks"
+  url = "#talks"
   weight = 2
 
 [[menu.main]]
-  name = "Posts"
+  name = "Blog"
   url = "#posts"
   weight = 3
 
-[[menu.main]]
-  name = "Projects"
-  url = "#projects"
-  weight = 4
+#[[menu.main]]
+#  name = "Projects"
+#  url = "#projects"
+#  weight = 4
 
-[[menu.main]]
-  name = "Tutorials"
-  url = "/tutorial/"
-  weight = 5
+#[[menu.main]]
+#  name = "Tutorials"
+#  url = "/tutorial/"
+#  weight = 5
 
 [[menu.main]]
   name = "Contact"
