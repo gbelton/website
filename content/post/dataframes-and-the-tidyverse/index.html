@@ -1,0 +1,175 @@
+---
+title: Dataframes and the tidyverse
+author: ''
+date: '2017-02-12'
+slug: index
+categories: [R]
+tags: [R, tidyverse]
+image:
+  caption: ''
+  focal_point: ''
+---
+
+
+
+<p>
+The data frame is the primary structure for working with data in R. Whenever you have data that is arranged in a spreadsheet-like fashion, the default receptacle for that data in R is the data frame. In a data frame, each column contains measurements on one variable, and each row contains measurements on one case. All of the data in a column must be of the same type (numeric, character, or logical).
+</p>
+<p>
+R has been around for more than 20 years now, and some things that worked well 20 years ago are less than ideal now. Consider how your mobile phone has changed over the last 20 years:
+</p>
+<div class="figure">
+<img src="/post/dataframes-and-the-tidyverse/cellphones.jpg" />
+
+</div>
+Making changes to things as basic as data frames in R is difficult. If you change the definition of a data frame, then all of the existing R programs that use data frames would have to be re-written to use the new definition. To avoid this kind of problem, most development in R takes place in packages.
+</p>
+<p>
+The R package “<strong>tibble</strong>” provides tools for working with an alternative version of the data frame. A tibble is a data frame, but some things have been changed to make using them a little bit easier. The <strong>tibble </strong>package is part of the <a href="https://blog.rstudio.org/2016/09/15/tidyverse-1-0-0/"><strong>tidyverse</strong></a>, a set of packages that provide a useful set of tools for data cleaning and analysis. The tidyverse is extensively documented in the book <a href="http://amzn.to/2kzXaRA">R For Data Science</a>. In keeping with the open-source nature of R, that book is available free online: <a href="http://r4ds.had.co.nz/">http://r4ds.had.co.nz/</a>.
+</p>
+<p>
+You can load tibble, along with the rest of the tidyverse tools, like this:
+</p>
+<p class="sourceCode r">
+<code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code>
+</p>
+<p>
+The first time you do this, you will probably get an error message.
+</p>
+<pre class="sourceCode r">&gt; library(tidyverse)
+<span style="color: #ff0000;">Error in library(tidyverse) : there is no package called ‘tidyverse’</span></pre>
+<p>
+In that case, you need to install tidyverse:
+</p>
+<pre>install.packages('tidyverse')</pre>
+<p>
+You only need to do this installation once, but when you start a new R session you will need to reload the package with the library() command.
+</p>
+<p>
+Tibbles are one of the unifying features of the tidyverse, but most other R packages produce data frames. You can use the “as_tibble()” command to convert a data frame to a tibble:
+</p>
+<pre>
+> as_tibble(iris)
+# A tibble: 150 × 5
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+
+1           5.1         3.5          1.4         0.2  setosa
+2           4.9         3.0          1.4         0.2  setosa
+3           4.7         3.2          1.3         0.2  setosa
+4           4.6         3.1          1.5         0.2  setosa
+5           5.0         3.6          1.4         0.2  setosa
+6           5.4         3.9          1.7         0.4  setosa
+7           4.6         3.4          1.4         0.3  setosa
+8           5.0         3.4          1.5         0.2  setosa
+9           4.4         2.9          1.4         0.2  setosa
+10          4.9         3.1          1.5         0.1  setosa
+# ... with 140 more rows
+ </pre>
+<p>
+There are some things that happen when you load a normal data frame that don’t happen when you load a tibble. On the plus side, tibble() doesn’t change the structure of your data. The data.frame() command will convert character strings to factors, unless you remember to tell it not to do that. Tibble won’t create row names. Tibble also won’t change the names of you variables.
+</p>
+<p>
+This last feature can seem like a bug if you aren’t expecting it. One very common way to get data into R is to import it from a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">CSV </a>file. CSV files are often created from Excel spreadsheets, and the column headings on Excel spreadsheets often don’t conform to the R standards for variable names. Since tibble doesn’t change variable names, you can end up with column names that are not proper R variable names. For example, they might include spaces or not start with a letter. To refer to these names, you’ll need to enclose them in backticks. For example:
+</p>
+<pre><code>`Feb Data` #contains space</code></pre>
+<p>
+Tibbles have a nice print method that, by default, shows only the first ten rows of data, and the number of columns that will fit on a screen. This keeps you from flooding your console with data.
+</p>
+<pre>
+> irises  irises
+# A tibble: 150 × 5
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+
+1           5.1         3.5          1.4         0.2  setosa
+2           4.9         3.0          1.4         0.2  setosa
+3           4.7         3.2          1.3         0.2  setosa
+4           4.6         3.1          1.5         0.2  setosa
+5           5.0         3.6          1.4         0.2  setosa
+6           5.4         3.9          1.7         0.4  setosa
+7           4.6         3.4          1.4         0.3  setosa
+8           5.0         3.4          1.5         0.2  setosa
+9           4.4         2.9          1.4         0.2  setosa
+10          4.9         3.1          1.5         0.1  setosa
+# ... with 140 more rows
+ </pre>
+<p>
+You can control the number of rows and the width of the displayed data by explicitly calling ‘print.’ ‘width = Inf’ will print all of the columns.
+</p>
+<pre>
+>irises %>%
+ print(n=5, width = Inf) </pre>
+<p>
+You can look at the structure of an object, and get an overview of it, with the <code>str()</code> command:
+</p>
+<pre>
+> str(irises)
+Classes ‘tbl_df’, ‘tbl’ and 'data.frame': 150 obs. of 5 variables:
+ $ Sepal.Length: num 5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+ $ Sepal.Width : num 3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+ $ Petal.Length: num 1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+ $ Petal.Width : num 0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+ $ Species : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ... </pre>
+<p>
+Here are some more ways to look at basic information about a tibble (or a regular data frame):
+</p>
+<pre>
+> names(irises)
+[1] "Sepal.Length" "Sepal.Width" "Petal.Length"
+[4] "Petal.Width" "Species"
+>  ncol(irises)
+[1] 5
+> length(irises)
+[1] 5
+> dim(irises)
+[1] 150 5
+> nrow(irises)
+[1] 150 </pre>
+<pre>
+Summary() </pre>
+<p>
+provides a statistical overview of a data set:
+</p>
+<pre>
+> summary(irises)
+ Sepal.Length Sepal.Width Petal.Length
+ Min. :4.300 Min. :2.000 Min. :1.000
+ 1st Qu.:5.100 1st Qu.:2.800 1st Qu.:1.600
+ Median :5.800 Median :3.000 Median :4.350
+ Mean :5.843 Mean :3.057 Mean :3.758
+ 3rd Qu.:6.400 3rd Qu.:3.300 3rd Qu.:5.100
+ Max. :7.900 Max. :4.400 Max. :6.900
+ Petal.Width Species
+ Min. :0.100 setosa :50
+ 1st Qu.:0.300 versicolor:50
+ Median :1.300 virginica :50
+ Mean :1.199
+ 3rd Qu.:1.800
+ Max. :2.500 </pre>
+To specify a single variable within a data frame or tibble, use the dollar sign. R has another way of doing this, using column numbers, but using the dollar sign will make it much easier to understand your code if someone else needs to use it, or if you come back to look at it months after writing it.
+</p>
+<pre>
+> head(irises$Sepal.Length)
+[1] 5.1 4.9 4.7 4.6 5.0 5.4
+> summary(irises$Sepal.Length)
+ Min. 1st Qu. Median Mean 3rd Qu. Max.
+ 4.300 5.100 5.800 5.843 6.400 7.900 </pre>
+<p>
+To recap:
+</p>
+<ol>
+<li>
+Use data frames, and in particular, use the tidyverse and tibbles.
+</li>
+<li>
+Always understand the parameters of your data frame: the number of rows and columns.
+</li>
+<li>
+Understand what type of variables you have in your columns.
+</li>
+<li>
+Refer to your columns by name, using <code>$</code>, to make your code more readable.
+</li>
+<li>
+When in doubt, use <code>str()</code> on an object.
+</li>
+</ol>

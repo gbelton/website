@@ -1,0 +1,196 @@
+---
+title: 'More tidyverse: using dplyr functions'
+author: ''
+date: '2017-02-20'
+slug: using-dplyr-functions
+categories:
+  - R
+tags:
+  - R
+image:
+  caption: ''
+  focal_point: ''
+---
+This week, we return to our "Getting Started With R" series. Today we are going to look at some tools from the "dplyr" package. Hadley Wickham, the creator of dplyr, calls it "A Grammar of Data Manipulation."
+
+## filter()
+
+Use filter() for subsetting data by rows. It takes logical expressions as inputs, and returns all rows of your data for which those expressions are true.
+
+To demonstrate, let's start by loading the tidyverse library (which includes dplyr), and we'll also load the gapminder data.
+
+```r
+library(tidyverse)
+library(gapminder)
+```
+
+Here's how filter() works:
+
+```r
+filter(gapminder, lifeExp<30)
+```
+Produces this output:
+```
+# A tibble: 2 × 6
+      country continent  year lifeExp     pop gdpPercap
+       <fctr>    <fctr> <int>   <dbl>   <int>     <dbl>
+1 Afghanistan      Asia  1952  28.801 8425333  779.4453
+2      Rwanda    Africa  1992  23.599 7290203  737.0686
+>
+```
+
+## The pipe operator
+
+The pipe operator is one of the great features of the tidyverse. In base R, you often find yourself calling functions nested within functions nested within... you get the idea. The pipe operator <code>%&gt;%</code> takes the object on the left-hand side, and "pipes" it into the function on the right hand side.
+
+For example:
+
+```R
+> gapminder %>% head()
+# A tibble: 6 × 6
+      country continent  year lifeExp      pop gdpPercap
+       <fctr>    <fctr> <int>   <dbl>    <int>     <dbl>
+1 Afghanistan      Asia  1952  28.801  8425333  779.4453
+2 Afghanistan      Asia  1957  30.332  9240934  820.8530
+3 Afghanistan      Asia  1962  31.997 10267083  853.1007
+4 Afghanistan      Asia  1967  34.020 11537966  836.1971
+5 Afghanistan      Asia  1972  36.088 13079460  739.9811
+6 Afghanistan      Asia  1977  38.438 14880372  786.1134
+>
+```
+
+This is the equivalent of saying "head(gapminder)." So far, that doesn't seem a lot easier... but wait a bit and you'll see the beauty of the pipe.
+
+## select()
+
+We talked about using filter() to subset data by rows. We can use select() to do the same thing for columns:
+
+```
+> select(gapminder, year, lifeExp)
+# A tibble: 1,704 × 2
+    year lifeExp
+   <int>   <dbl>
+1   1952  28.801
+2   1957  30.332
+3   1962  31.997
+4   1967  34.020
+5   1972  36.088
+6   1977  38.438
+7   1982  39.854
+8   1987  40.822
+9   1992  41.674
+10  1997  41.763
+# ... with 1,694 more rows
+```
+
+Here's the same thing, but using pipes, and sending it through "head()" to make the display more compact:
+
+```R
+> gapminder %>%
++   select(year, lifeExp) %>%
++   head(4)
+# A tibble: 4 × 2
+   year lifeExp
+  <int>   <dbl>
+1  1952  28.801
+2  1957  30.332
+3  1962  31.997
+4  1967  34.020
+>
+```
+
+We are going to be making some changes to the gapminder data, so let's start by creating a copy of the data. That way, we don't have to worry about changing the original data.
+
+```
+new_gap <- gapminder
+```
+## mutate()
+
+mutate() is a function that defines a new variable and inserts it into your tibble. For example, gapminder has GDP per capita and population; if we multiply these we get the GDP.
+
+```
+new_gap %>%
+  mutate(gdp = pop * gdpPercap)
+```
+Note that the above code creates the new field and displays the resulting tibble; we would have had to use the "<-" operator to save the new field in our tibble.
+
+## arrange()
+
+arrange() reorders the rows in a data frame. The gapminder data is currently arranged by country, and then by year. But what if we wanted to look at it by year, and then by country?
+
+```R
+new_gap %>%
+  arrange(year, country)
+```
+```
+# A tibble: 1,704 × 6
+       country continent  year lifeExp      pop  gdpPercap
+        <fctr>    <fctr> <int>   <dbl>    <int>      <dbl>
+1  Afghanistan      Asia  1952  28.801  8425333   779.4453
+2      Albania    Europe  1952  55.230  1282697  1601.0561
+3      Algeria    Africa  1952  43.077  9279525  2449.0082
+4       Angola    Africa  1952  30.015  4232095  3520.6103
+5    Argentina  Americas  1952  62.485 17876956  5911.3151
+6    Australia   Oceania  1952  69.120  8691212 10039.5956
+7      Austria    Europe  1952  66.800  6927772  6137.0765
+8      Bahrain      Asia  1952  50.939   120447  9867.0848
+9   Bangladesh      Asia  1952  37.484 46886859   684.2442
+10     Belgium    Europe  1952  68.000  8730405  8343.1051
+# ... with 1,694 more rows
+```
+## group_by() and summarize()
+
+The group_by() function adds grouping information to your data, which then allows you to do computations by groups. The summarize() function is a natural partner for group_by(). summarize() takes a dataset with <em>n</em> observations, calculates the requested summaries, and returns a dataset with 1 observation:
+
+```R
+my_gap %>%
+  group_by(continent) %>%
+  summarize(n = n())
+```
+The functions you’ll apply within `summarize()` include classical statistical summaries, like `mean()`, `>median()`, `var()`, `sd()`>, `mad()`, `IQR()`, `min()`, and `max()`. Remember they are functions that take $n$ inputs and distill them down into 1 output.
+
+```R
+new_gap %>%
+  group_by(continent) %>%
+  summarize(avg_lifeExp = mean(lifeExp))
+```
+```
+# A tibble: 5 × 2
+  continent avg_lifeExp
+     <fctr>       <dbl>
+1    Africa    48.86533
+2  Americas    64.65874
+3      Asia    60.06490
+4    Europe    71.90369
+5   Oceania    74.32621
+```
+## A wondrous example
+<p>To fully appreciate the wonders of the pipe command and the dplyr data manipulation commands, take a look at this example. It comes from <a href="https://twitter.com/JennyBryan">Jenny Brian</a>'s excellent course, <a href="http://stat545.com/index.html">STAT545</a>, at the University of British Columbia (to whom I owe a debt for much of the information included in this series of blog posts).
+
+```R
+new_gap %>%
+  select(country, year, continent, lifeExp) %>%
+  group_by(continent, country) %>%
+  ## within country, take (lifeExp in year i) - (lifeExp in year i - 1)
+  ## positive means lifeExp went up, negative means it went down
+  mutate(le_delta = lifeExp - lag(lifeExp)) %>%
+  ## within country, retain the worst lifeExp change = smallest or most negative
+  summarize(worst_le_delta = min(le_delta, na.rm = TRUE)) %>%
+  ## within continent, retain the row with the lowest worst_le_delta
+  top_n(-1, wt = worst_le_delta) %>%
+  arrange(worst_le_delta)
+```
+
+```
+Source: local data frame [5 x 3]
+Groups: continent [5]
+
+  continent     country worst_le_delta
+     <fctr>      <fctr>          <dbl>
+1    Africa      Rwanda        -20.421
+2      Asia    Cambodia         -9.097
+3  Americas El Salvador         -1.511
+4    Europe  Montenegro         -1.464
+5   Oceania   Australia          0.170
+```
+To quote Jenny: "Ponder that for a while. The subject matter and the code. Mostly you’re seeing what genocide looks like in dry statistics on average life expectancy."

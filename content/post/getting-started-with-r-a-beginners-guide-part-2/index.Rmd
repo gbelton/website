@@ -1,0 +1,96 @@
+---
+title: 'Getting Started With R: A Beginner''s Guide, Part 2'
+author: ''
+date: '2017-01-16'
+slug: getting-started-with-r-a-beginner-s-guide-part-2
+categories: [R]
+tags: [R]
+image:
+  caption: ''
+  focal_point: ''
+---
+Last week, we installed R and R Studio, and we tried out a few simple R commands in the console. But using R in interactive mode, while powerful, has some limits. Today we are going to learn how to use R as a programming language, and we will write our first R Script. But first, let's look at how we can use R Studio to keep our work organized.
+
+A lot of tutorials introduce these topics much later, if at all. I think it's very important to learn how to use these organizational tools from the very beginning. Eventually, you are going to need to leave R to go do something else, and you'll want to be able to come back to R and continue what you were doing. You will have multiple R projects going at the same time, and you'll want to be able to keep them separated.
+
+You've probably closed R studio since last week's lesson. When you quit R, a box popped up asking "Save workspace image to ~/.Rdata?" If you choose "Yes" at this prompt, when you restart R Studio, you will see in the Environment pane the objects you created in your previous session. In that same pane, you can select the "History" tab, and see all of the commands you ran in that last session. This is not the ideal way to start, stop, and re-start your work in R, but it's a start.
+
+## Working Directory
+
+Your "working directory" is where R will look (by default) for any files you want to load, and where R (again, by default) will save any files that you write to disk. You can check your working directory with:
+
+```r
+getwd()
+```
+
+It's also displayed at the top of the R Studio console.
+
+You can change your working directory directly with the command:
+
+```r
+setwd("~/MyNewDirectory")
+```
+
+The above command assumes that there is already a directory called "MyNewDirectory," and it is a subdirectory of you home directory. You can also change your working directory by navigating to it in the Files pane of R Studio, and then selecting "More" and "Set as Working Directory" from the Files menu.
+
+Note well that I said you can do these things, not that you should do them. As we will see, there is a better way:
+
+## R Studio Projects
+
+As a general rule, it's a very good idea to keep all the files associated with a project in one place. That would include data files, R scripts, figures, analytical results, etc. And R Studio makes it very easy to accomplish this via its support for projects.
+
+To demonstrate, let's make a project to use for the rest of this series of tutorials. In the menu bar at the top of R Studio, click "File" then "New Project." You'll see this:
+
+![](new-project.jpg) 
+
+As you can see, you can create a new directory, or choose one that already exists on you computer. The third option, Version Control, is something we will talk about later.
+
+If you choose "New Directory," you will get an additional menu with three choices: Empty Project, R Package, and Shiny Web Application. Choose Empty Project. Then give your new project a name. I called mine "tutorials."
+
+Now let's create an *R script*. An R script is a file containing a series of commands that can be executed by R; in other words, a computer program.
+
+In R Studio, click the File menu item at the top left of the screen, then select New File, and then R Script. Or you can use the keyboard shortcut, Ctrl-Shift-N. Now the console window no longer takes up the entire left side of your window; it has been split in half. The top left pane is now labeled "Untitled1." Click on the little picture of a floppy disk, and a dialogue box will pop up, allowing you to name script. Let's name this one "iris.R." By convention, the file names of R scripts end with ".R" or ".r," and you should follow this convention unless you have a good reason to do otherwise.
+
+Since R is primarily a tool for analyzing data, we are going to need some data! Fortunately, there are a lot of ways to get data into R, and we will look at those later. But R also has some very convenient datasets built-in. For this project, we are going to use the iris dataset which is included in R. This dataset contains four measurements of 150 flowers representing three different species of iris.
+
+Let's inspect the data. Type "iris" in the console window, and press Enter. You'll see... well, you'll see a bunch of data scroll by faster than you can tell what it is. Try this instead:
+
+```{r}
+head(iris)
+```
+
+That's better, now we can see how the iris data is organized. Each row is an observation, and each column is a variable.
+
+Since "head" shows us the first six rows of our data, what do you suppose would happen if you typed "tail(iris)?" Try it and see!
+
+You can learn more about the iris data by typing "?iris", and you will learn that iris is a data frame containing a famous dataset created by a researcher named Edgar Anderson.
+
+But wait... we typed these commands in the console, not in our new R script. Let's fix that! Look at your Environment window, and you'll see another tab labeled "History." Click that, and you'll see all of the commands you have run during this R session, in the order that you ran them. You can select a command by clicking on it, and you can select multiple commands using Ctrl-click. Select "head(iris)" and all of the subsequent commands, then click "To Source" in the menu bar. Now the commands are there in your "iris.R" script.
+
+Let's plot the iris data. In the iris.R window, type `plot(iris$Petal.Length, iris$Petal.Width, main="Edgar Anderson's Iris Data")` (or copy and paste it from here). When you hit Enter, the cursor moves to a new line and... nothing happens. That's because you've edited the script, but not sent the command to R to be executed. To execute the command, you can put the cursor anywhere in that line and press Ctrl-R, or put the cursor in that line and click "Run" at the top of the window. You can also use your mouse to select multiple commands and then click Run, and the commands will execute in order.
+
+Once you've executed that command, you'll see the File window (in the bottom right corner of R Studio) change to the Plot window. Depending on your screen settings, you might need to click the "Zoom" button to get a good look at your plot. It's a simple scatter plot, with petal length on the x axis, and petal width on the y axis. You can already see that there seems to be some clustering of the data. Let's make the plots for each iris species a different color:
+
+```{r}
+plot(iris$Petal.Length, iris$Petal.Width, pch=21, bg=c("red","green3","blue")
+  [unclass(iris$Species)], main="Edgar Anderson's Iris Data")
+```
+
+We've added some stuff to our basic plot, but don't worry about those details right now; we are going to go in depth on plotting later. But do notice that the color-coding allows us to instantly see the relationship of petal width to length for the three different species of iris. Also notice that the above two lines are a single command. R doesn't mind if a command is broken across multiple lines in a script, it uses the () to know when it gets to the end. It's generally a good idea to break very long commands into multiple lines to make your code easier to read.
+
+Let's do one more thing before we call it a day. We'll output our nice plot to a pdf file:
+
+`dev.print(pdf, "iris_plot.pdf")`
+
+You'll see some cryptic text in the console screen, and if you click the tab to change the Plots window to the Files window, you'll see that there is a new file called "iris_plot.pdf" in that window. Make sure your script file is saved. Now you can exit R Studio, and when you come back, you can easily re-run the same script to recreate the same plot. Even better, you have your input data, your processing script, and your output, all in the same folder. The could be very helpful when you come back to a project months later, look at the plot, and say to yourself, "Self, how did you make that plot?"
+
+I strongly recommend you adopt this workflow for all of your projects:
+
+1. Create an R Project.
+1. Keep your inputs in the project folder.
+1. Keep your processing scripts there, and run them in pieces or all at once.
+1. Save your outputs in that folder.
+
+You can do things in R studio using your mouse, such as importing a data file by clicking on it, or saving a plot using the menu in the plot window. Don't do that! Get in the habit of doing all of your loading, processing, and saving, in your script file. You'll make it much easier for someone else (or even yourself, months later) to understand how a table was created, how a figure was  generated, and what transformations and calculations were done to your data.
+
+Last week I said we would get to version control, and how to share your data and code, but we didn't quite get there. So that will be our topic for next week.

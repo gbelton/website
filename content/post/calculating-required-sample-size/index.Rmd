@@ -1,0 +1,110 @@
+---
+title: Calculating required sample size in R and SAS
+author: ''
+date: '2017-02-15'
+slug: index
+categories:
+  - R
+  - SAS
+tags:
+  - R
+  - SAS
+image:
+  caption: ''
+  focal_point: ''
+---
+Today we are going to digress from our ongoing "Intro to R" series, and talk about a subject that's been on my mind lately: sample sizes.
+
+An important question when designing an experiment is "How big a sample do I need?" A larger sample will give more accurate results, but at a cost. Use too small a sample, and you may get inconclusive results; too large a sample, and you're wasting resources.
+
+To calculate the required sample size, you'll need to know four things:
+
+* The size of the response you want to detect
+* The variance of the response
+* The desired significance level
+* The desired power
+
+## Delta
+
+Suppose you are comparing a treatment group to a placebo group, and you will be measuring some continuous response variable which, you hope, will be affected by the treatment. We can consider the mean response in the treatment group, μ1, and the mean response in the placebo group, μ2. We can then define Δ = μ1 - μ2. The smaller the difference you want to detect, the larger the required sample size.
+
+## Variance
+
+Of the four variables that go into the sample size calculation, the variance of the responses can be the most difficult to determine. Usually, before you do your experiment, you don't know what variance to expect. Investigators often conduct a pilot study to determine the expected variance, or information from a previous published study can be used.
+
+The effect size combines the minimal relevant difference and the variability into one measurement, Δ/σ.
+
+## Significance
+
+Significance is equal to 1 - α, where α is the probability of making a Type 1 Error. That is, alpha represents the chance of a falsely rejecting H0 and picking up a false-positive effect. Alpha is usually set at 0.05, for a 95% significance.
+
+## Power
+
+The power of a test is 1-β, where beta is the probability of a Type 2 error (failing to reject the null hypothesis when the alternative hypothesis is true). In other words, if you have a 20% chance of failing to detect a real difference, then the power of your test is .8.
+
+## Sample Size Calculation
+
+The calculation for the total sample size is:
+
+$$n=\frac{4(Z_{\alpha}+Z_{\beta})^2\sigma^2}{\Delta^2}$$
+
+For a two-sided test, we use Zα/2 instead of Zα.
+
+For example, suppose we want to be able to detect a difference of 20 units, with 90% power using a two-sided t-test, and a .05 significance level. We are expecting, based on previous research, that the standard deviation of the responses will be about 60 units.
+
+In this example, α=.05, β=.10, Δ=20, and σ=60. Zα/2=1.96, and Zβ=1.28. So we have:
+
+$$n=\frac{4(1.96+1.28)^2\sigma^2}{20^2}\approx 378$$
+
+or, about 189 for each treatment group.
+
+## Sample Size in R
+
+You could write a function in R to do the above calculation, but fortunately, you don't need to. The pwr library has done it for you. In this case, we will use the pwr.t.test() function.
+
+```r
+pwr.t.test(n = , d = , sig.level = , power = , type = c("two.sample", 
+    "one.sample", "paired"))
+```
+
+
+In this case, we will leave out the "n=" parameter, and it will be calculated by R. If we fill in a sample size, and use "power = NULL", then it will calculate the power of our test.
+
+In this equation, d is the effect size, so we will calculate that from our delta and sigma values. In R, it looks like this:
+
+```
+> delta <- 20
+> sigma <- 60
+> d <- delta/sigma
+> pwr.t.test(d=d, sig.level=.05, power = .90, type = 'two.sample')
+
+    Two-sample t test power calculation
+
+                      n = 190.0991
+                      d = 0.3333333
+           sig.level = 0.05
+               power = 0.9
+        alternative = two.sided
+
+NOTE: n is number in *each* group
+```
+
+## Sample Size in SAS
+
+In SAS, we can use PROC power to do the same calculations. One difference is that PROC power requires us to enter a value for the mean of each group. Since what we are really interested in is the difference, we can enter '0' for group 1, and '20' for group 2, so that the difference in means will be 20. We also need to enter the standard deviation, unlike R where we calculated the effect size separately. The significance level defaults to .05, so we don't need to enter it.
+
+```SAS 
+proc power;
+   twosamplemeans test=diff
+   groupmeans = 0 | 20
+   stddev = 60
+   npergroup = .
+   power = 0.9;
+run;
+```
+ 
+And here is the output: 
+
+![](/post/calculating-required-sample-size/Clipboard01.png)
+
+The alert reader has, by now, noticed a discrepancy: when we manually calculated the desired sample size, we got 189 per group. R gave us a result of 190.091, and SAS says it's 191. Why? The simple answer is that neither program is using the above formula. pwr.t.test in R uses the uniroot() function to calculate n, and SAS uses a different formula. Furthermore, SAS and R are actually giving the same result, but SAS rounds up to 191. You can't have .091 test subjects, and you don't want to underpower the test, so it's proper to round up. If you really want the details, the source code for pwr.t.test is on GitHub, and the method SAS uses to calculate n is on page 4964 of the SAS/STAT User Guide.
