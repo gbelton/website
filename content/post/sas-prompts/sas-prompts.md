@@ -3,8 +3,8 @@ title: Using Prompts with SAS Enterprise Guide
 author: ''
 date: '2019-01-07'
 slug: sas-prompts
-categories: []
-tags: []
+categories: [sas]
+tags: [sas]
 image:
   caption: ''
   focal_point: ''
