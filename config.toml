@@ -44,7 +44,7 @@ enableGitInfo = false
 #   See: https://gohugo.io/getting-started/configuration/#configure-blackfriday
 [blackfriday]
   hrefTargetBlank = true  # `true` opens external links in a new tab.
-  fractions = true  # `false` disables smart fractions (e.g. 5/12 formatted as a fraction).
+  fractions = false  # `false` disables smart fractions (e.g. 5/12 formatted as a fraction).
   smartypants = true  # `false` disables all smart punctuation substitutions (e.g. smart quotes, dashes, fractions).
   extensions = ["backslashLineBreak"]
 
@@ -177,7 +177,7 @@ enableGitInfo = false
   #   https://sourcethemes.com/academic/docs/writing-markdown-latex/#highlighting-options
   highlight = true
   highlight_languages = ["r", "sas", "python", "armasm"]
-  # highlight_style = "github"
+  highlight_style = "github"
 
   # Enable native social sharing buttons?
   sharing = true
@@ -189,8 +189,8 @@ enableGitInfo = false
 
   # Link custom CSS and JS assets
   #   (relative to /static/css and /static/js respectively)
-  custom_css = []
-  custom_js  = []
+  custom_css = ['github.css']
+  custom_js  = ['highlight.pack.js']
 
   # Publication types.
   #   Used to categorize publications.
