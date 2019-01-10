@@ -15,14 +15,23 @@ weight = 60
 
 +++
 
-This is an example of using the *custom* widget to create your own homepage section.
+## Courses taught at Embry-Riddle Worldwide:
 
-I am a teaching instructor for the following courses at University X:
+### Stat 222 Business Statistics
 
-- CS101: An intro to computer science
-- CS102: An intro to computer science
-- CS103: An intro to computer science
-- CS104: An intro to computer science
-- CS105: An intro to computer science
-- CS106: An intro to computer science
-- CS107: An intro to computer science
+This course is a study of basic descriptive and inferential statistics. Topics include types
+of data, sampling techniques, measures of central tendency and dispersion, elementary
+probability, discrete and continuous probability distributions, sampling distributions,
+hypothesis testing, confidence intervals, and simple linear regression.
+
+[Recent Syllabus](files/STAT 222 Syllabus - Jan 2019-Approved.pdf)
+
+## Courses taught at <br> Wake Technical Community College:
+
+### Coming soon!
+
+
+
+
+
+
