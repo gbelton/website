@@ -47,7 +47,7 @@ tags = []
 
 # Links (optional).
 url_pdf = ""
-url_slides = ""
+url_slides = "https://www.slideshare.net/GeraldBelton1/statistics-for-non-statisticians-127839254"
 url_video = ""
 url_code = ""
 
