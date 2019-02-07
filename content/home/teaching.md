@@ -32,7 +32,7 @@ hypothesis testing, confidence intervals, and simple linear regression.
 
 This course covers applications of statistical software for data management and reporting. Topics include data management, data preprocessing, and modeling including linear and logistic regression analysis using programming tools. Upon completion, students should be able to process data and generate reports that support business decision-making.
 
-[Recent Syllabus](files/SP:2018-BAS-220-Syllabus-8Week-Online.pdf)
+[Recent Syllabus](files/SP2018-BAS-220-Syllabus-8Week-Online.pdf)
 
 
 
