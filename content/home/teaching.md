@@ -31,6 +31,7 @@ hypothesis testing, confidence intervals, and simple linear regression.
 ### BAS-150: Introduction to Analytical Programming
 
 This course introduces SAS for analytics. Topics include utilization of analytical and statistical software packages for data management, data visualization, and exploratory data analysis. 
+[Recent Syllabus](files/BAS150Syllabus-Fall2019_section1871.pdf)
 
 ### BAS-220: Applied Analytical Programming
 
