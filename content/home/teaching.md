@@ -39,9 +39,6 @@ This course covers applications of SAS for data management and reporting. Topics
 
 [Recent Syllabus](files/SP2018-BAS-220-Syllabus-8Week-Online.pdf)
 
-### BAS-230: Applied Predictive Modeling
-
-This course covers advanced applications of predictive models using Python. Topics include the advanced use of classification and regression models in real-world scenarios. 
 
 
 
