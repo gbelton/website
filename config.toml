@@ -57,7 +57,7 @@ enableGitInfo = false
 
   # Organizations/Affiliations.
   #   Separate multiple entries with a comma, using the form: `[ {name="Org1", url=""}, {name="Org2", url=""} ]`.
-  organizations = [ { name = "North Carolina Medicaid", url = "" }, 
+  organizations = [ { name = "NC State Health Plan", url = "" }, 
   { name = "Wake Technical Community College", url = "" },
   { name = "Embry-Riddle Aeronautical University", url = "" }]
 
