@@ -334,6 +334,11 @@ enableGitInfo = false
     name = "CV"
     url = "files/cv.pdf"
     weight = 7
+    
+ [[menu.main]]
+    name = "Guitars"
+    url = "https://guitars.geraldbelton.com"
+    weight = 8
 
 # Search.
 #[params.search]
